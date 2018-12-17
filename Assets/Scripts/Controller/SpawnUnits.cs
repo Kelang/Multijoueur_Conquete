@@ -28,7 +28,7 @@ public class SpawnUnits : MonoBehaviour {
     void spawnUnite() {
 
         // On instancie nos unites et on les places dans l'environnement
-        var unit = Instantiate(uneUnite, lePointDuSpawn.transform.position, Quaternion.identity);
+        var unit = PhotonNetwork.Instantiate(uneUnite.name, lePointDuSpawn.transform.position, Quaternion.identity, 0);
         manager.Players[0].activeUnits.Add(unit);
         VariablesGlobales.effectifTotal_joueur_01++;
     }

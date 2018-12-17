@@ -31,6 +31,7 @@ public class RTSManager : MonoBehaviour {
                 var player = go.AddComponent<Player>();
                 player.Info = p;
 
+
                 if (!p.isAi)
                 {
                     if (Player.Default == null) Player.Default = p;

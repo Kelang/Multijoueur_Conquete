@@ -12,6 +12,7 @@ using UnityEngine.AI;
 
 public class Construction : MonoBehaviour
 {
+
     // Boutons de l'UI pour construire
     public Button btnConstruireMine;
     public Button btnConstruireMineGrande;
@@ -48,11 +49,14 @@ public class Construction : MonoBehaviour
     public bool isPlaceable;
 
     // Manager du jeu
-    RTSManager manager;
+    ExitGames.UtilityScripts.PlayerRoomIndexing playerRoomIndex;
+
+    
 
 
     // Au début de la partie, on ajoute des détecteurs de clics au boutons de l'UI
     private void Start() {
+        // Le code arrête ici for some reason
         Button btn1 = btnConstruireMine.GetComponent<Button>();
         Button btn2 = btnConstruireMineGrande.GetComponent<Button>();
         Button btn3 = btnConstruireCaserneLancier.GetComponent<Button>();
@@ -65,7 +69,11 @@ public class Construction : MonoBehaviour
         btn4.onClick.AddListener(delegate {GestionNouveauBatimentBtn(3); });
         btn5.onClick.AddListener(delegate {GestionNouveauBatimentBtn(4); });
 
-        manager = GetComponent<RTSManager>();
+        //Debug.Log(playerRoomIndex.name);
+        
+
+    
+
     }
 
 
@@ -107,13 +115,17 @@ public class Construction : MonoBehaviour
             // Si l'object n'est plus en mode placement, on supprime son 'fantôme'
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             // Sinon on place un vrai bâtiment sur la carte depuis un prefab
             else
             {
-                currentPlaceableObject = Instantiate(minePrefab);
+
+                
+                //currentPlaceableObject = Instantiate(minePrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(minePrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0),Quaternion.identity, 0);
                 idBatiment = 0;
+                
             }
         }
 
@@ -123,12 +135,12 @@ public class Construction : MonoBehaviour
             // Si l'object n'est plus en mode placement, on supprime son 'fantôme'
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             // Sinon on place un vrai bâtiment sur la carte depuis un prefab
             else
             {
-                currentPlaceableObject = Instantiate(mineGrandePrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(mineGrandePrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 1;
 
             }
@@ -139,11 +151,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(caserneLancierPrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(caserneLancierPrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 2;
             }
         }
@@ -153,11 +165,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(caserneChevalierPrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(caserneChevalierPrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 3;
             }
         }
@@ -167,11 +179,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(caserneArcherPrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(caserneArcherPrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 4;
             }
         }
@@ -181,17 +193,24 @@ public class Construction : MonoBehaviour
     // Même code que la fonction GestionNouveauBatimentBtn() mais utilise des keycode plutôt que des boutons
     private void GestionNouveauBatimentKey()
     {
+        
+        if (!PhotonNetwork.inRoom)
+        {
+            // only use PhotonNetwork.Instantiate while in a room.
+            return;
+        }
+        
 
         // MINE 
         if (Input.GetKeyDown(newMine))
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(minePrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(minePrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 0;
             }
         }
@@ -201,11 +220,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(mineGrandePrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(mineGrandePrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 1;
             }
         }
@@ -215,11 +234,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(caserneLancierPrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(caserneLancierPrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 2;
             }
         }
@@ -230,11 +249,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(caserneChevalierPrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(caserneChevalierPrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 3;
             }
         }
@@ -244,11 +263,11 @@ public class Construction : MonoBehaviour
         {
             if (currentPlaceableObject != null)
             {
-                Destroy(currentPlaceableObject);
+                PhotonNetwork.Destroy(currentPlaceableObject);
             }
             else
             {
-                currentPlaceableObject = Instantiate(caserneArcherPrefab);
+                currentPlaceableObject = PhotonNetwork.Instantiate(caserneArcherPrefab.name, InputToEvent.inputHitPos + new Vector3(0, 0f, 0), Quaternion.identity, 0);
                 idBatiment = 4;
             }
         }          
@@ -277,6 +296,8 @@ public class Construction : MonoBehaviour
     // DÉCLENCHEMENT DE LA CONSTRUCTION AU CLIC 
     private void ConstruireAuClic()
     {
+
+
         // Si on fait un clic gauche et que le bâtiment est dans une zone constructible, on le construit
         if (Input.GetMouseButtonDown(0) && isPlaceable == true)
         {
@@ -314,7 +335,7 @@ public class Construction : MonoBehaviour
                 
         }
         else if (Input.GetMouseButtonDown(1) && currentPlaceableObject != null) {
-            Destroy(currentPlaceableObject); 
+           PhotonNetwork.Destroy(currentPlaceableObject); 
         }
     }
 
@@ -323,7 +344,7 @@ public class Construction : MonoBehaviour
     // GESTION DE LA CONSTRUCTION DES BÂTIMENTS
     IEnumerator GestionConstruction(GameObject objet)
     {
-        manager.Players[0].activeUnits.Add(objet);
+        //manager.Players[0].activeUnits.Add(objet);
 
         // On active différents éléments du gameobject
         objet.GetComponent<Collider>().enabled = true;
